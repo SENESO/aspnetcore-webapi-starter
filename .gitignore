@@ -1,0 +1,23 @@
+# Build output
+bin/
+obj/
+
+# Publish
+publish/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+# Logs (Serilog file sink writes here)
+logs/
+
+# Local secrets - never commit real connection strings or keys
+appsettings.Production.json
+appsettings.*.local.json
+
+# OS
+.DS_Store
+Thumbs.db
