@@ -37,6 +37,7 @@ Migrations also apply automatically on startup, so step 2 of the commands is opt
 | POST | `/api/auth/register` | No | Register a user, returns a JWT |
 | POST | `/api/auth/login` | No | Login, returns a JWT |
 | GET | `/api/products` | No | List all products |
+| GET | `/api/products/paged?page=1&pageSize=20` | No | List products, paginated (page ≥ 1, pageSize 1–100) |
 | GET | `/api/products/{id}` | No | Get one product |
 | GET | `/api/products/search?term=` | No | Search products by name |
 | POST | `/api/products` | Yes | Create a product |

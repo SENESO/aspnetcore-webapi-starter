@@ -34,6 +34,11 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<List<ProductDto>>> Search([FromQuery] string term, CancellationToken ct)
         => Ok(await _products.SearchAsync(term, ct));
 
+    // GET /api/products/paged?page=1&pageSize=20
+    [HttpGet("paged")]
+    public async Task<ActionResult<PagedResult<ProductDto>>> GetPaged([FromQuery] PaginationParams paging, CancellationToken ct)
+        => Ok(await _products.GetPagedAsync(paging, ct));
+
     // POST /api/products
     [HttpPost]
     [Authorize]

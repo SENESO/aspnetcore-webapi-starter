@@ -73,6 +73,16 @@ public class ProductService
         return products.Select(ToDto).ToList();
     }
 
+    public async Task<PagedResult<ProductDto>> GetPagedAsync(PaginationParams paging, CancellationToken ct = default)
+    {
+        var (items, total) = await _products.GetPagedAsync(paging.SafePage, paging.SafePageSize, ct);
+        return new PagedResult<ProductDto>(
+            items.Select(ToDto).ToList(),
+            paging.SafePage,
+            paging.SafePageSize,
+            total);
+    }
+
     private static ProductDto ToDto(Product p) => new()
     {
         Id = p.Id,

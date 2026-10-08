@@ -148,4 +148,38 @@ public class ProductServiceTests
         Assert.Single(result);
         Assert.Equal("Keyboard", result[0].Name);
     }
+
+    [Fact]
+    public async Task GetPagedAsync_ReturnsItemsWithCorrectMetadata()
+    {
+        var items = new List<Product> { new() { Id = 3, Name = "Monitor", Price = 199.99m, Stock = 5 } };
+        _products.Setup(p => p.GetPagedAsync(2, 10, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((items, 23));
+
+        var result = await _service.GetPagedAsync(new PaginationParams(2, 10));
+
+        Assert.Single(result.Items);
+        Assert.Equal("Monitor", result.Items[0].Name);
+        Assert.Equal(2, result.Page);
+        Assert.Equal(10, result.PageSize);
+        Assert.Equal(23, result.TotalCount);
+        Assert.Equal(3, result.TotalPages);
+        Assert.True(result.HasNextPage);
+        Assert.True(result.HasPreviousPage);
+    }
+
+    [Fact]
+    public async Task GetPagedAsync_ClampsInvalidPageAndPageSize()
+    {
+        _products.Setup(p => p.GetPagedAsync(1, 20, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((new List<Product>(), 0));
+
+        var result = await _service.GetPagedAsync(new PaginationParams(-5, 500));
+
+        Assert.Equal(1, result.Page);
+        Assert.Equal(20, result.PageSize);
+        Assert.Equal(0, result.TotalPages);
+        Assert.False(result.HasNextPage);
+        _products.Verify(p => p.GetPagedAsync(1, 20, It.IsAny<CancellationToken>()), Times.Once);
+    }
 }

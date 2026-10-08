@@ -6,4 +6,5 @@ namespace Application.Interfaces;
 public interface IProductRepository : IGenericRepository<Product>
 {
     Task<List<Product>> SearchByNameAsync(string term, CancellationToken ct = default);
+    Task<(List<Product> Items, int TotalCount)> GetPagedAsync(int page, int pageSize, CancellationToken ct = default);
 }

@@ -15,4 +15,12 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
             .Where(p => p.Name.Contains(term))
             .OrderBy(p => p.Name)
             .ToListAsync(ct);
+
+    public async Task<(List<Product> Items, int TotalCount)> GetPagedAsync(int page, int pageSize, CancellationToken ct = default)
+    {
+        var query = _db.Products.AsNoTracking().OrderBy(p => p.Id);
+        var total = await query.CountAsync(ct);
+        var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(ct);
+        return (items, total);
+    }
 }
